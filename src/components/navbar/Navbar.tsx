@@ -48,9 +48,9 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="relative">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ justifyContent: "center" }}>
           <Typography
             variant="h6"
             noWrap
@@ -126,7 +126,12 @@ function Navbar() {
           >
             {AppName}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex", maxWidth: "1000px" },
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page[0]}
