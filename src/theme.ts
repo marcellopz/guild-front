@@ -12,17 +12,6 @@ export const themeOptions: ThemeOptions = {
     },
   },
   direction: "ltr",
-  mixins: {
-    toolbar: {
-      minHeight: 56,
-      "@media (min-width:0px) and (orientation: landscape)": {
-        minHeight: 48,
-      },
-      "@media (min-width:600px)": {
-        minHeight: 64,
-      },
-    },
-  },
   palette: {
     common: {
       black: "#000",
@@ -111,7 +100,8 @@ export const themeOptions: ThemeOptions = {
     "0px 11px 15px -7px rgba(0, 0, 0, 0.2),0px 24px 38px 3px rgba(0, 0, 0, 0.14),0px 9px 46px 8px rgba(0, 0, 0, 0.12)",
   ],
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily:
+      'Rubik, Arial, "Noto Color Emoji", "Segoe UI Emoji", sans-serif',
     fontSize: 14,
     fontWeightLight: 300,
     fontWeightRegular: 400,
@@ -119,21 +109,18 @@ export const themeOptions: ThemeOptions = {
     body2: {
       fontSize: "0.875rem",
       fontWeight: 500,
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
       lineHeight: "1.71429em",
       color: "rgba(0, 0, 0, 0.87)",
     },
     body1: {
       fontSize: "0.875rem",
       fontWeight: 400,
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
       lineHeight: "1.46429em",
       color: "rgba(0, 0, 0, 0.87)",
     },
     caption: {
       fontSize: "0.75rem",
       fontWeight: 400,
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
       lineHeight: "1.375em",
       color: "rgba(0, 0, 0, 0.54)",
     },
@@ -141,7 +128,6 @@ export const themeOptions: ThemeOptions = {
       fontSize: "0.875rem",
       textTransform: "uppercase",
       fontWeight: 500,
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
       color: "rgba(0, 0, 0, 0.87)",
     },
   },
@@ -169,5 +155,21 @@ export const themeOptions: ThemeOptions = {
     modal: 1300,
     snackbar: 1400,
     tooltip: 1500,
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: "0.5rem",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
   },
 };

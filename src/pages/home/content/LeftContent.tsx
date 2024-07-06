@@ -113,7 +113,7 @@ function LeftContent() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            "& > div:nth-child(even)": {
+            "& > div:nth-of-type(even)": {
               backgroundColor: "#f5e8cd6e",
             },
           }}

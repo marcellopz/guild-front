@@ -13,14 +13,11 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import { AppName } from "../../App";
+import { AuthContext } from "../../contexts/authContext";
 
 const pages = [
   ["Home", "/"],
   ["About", "/about"],
-];
-const settings = [
-  ["Profile", "/profile"],
-  ["Logout", "/logout"],
 ];
 
 function Navbar() {
@@ -31,6 +28,13 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const {
+    authenticated,
+    setLoginFormOpen,
+    setRegisterFormOpen,
+    authUser,
+    handleLogout,
+  } = React.useContext(AuthContext);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -48,7 +52,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="relative">
+    <AppBar position="relative" sx={{ borderRadius: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: "center" }}>
           <Typography
@@ -145,40 +149,83 @@ function Navbar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
+          {authenticated ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, display: "flex", gap: "12px" }}
+                >
+                  <Typography fontSize={18} color="primary.contrastText">
+                    {authUser?.name}
+                  </Typography>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
                 <MenuItem
-                  key={setting[0]}
                   onClick={() => {
-                    navigate(setting[1]);
+                    navigate("/profile");
+                    handleCloseUserMenu();
                   }}
                 >
-                  <Typography textAlign="center">{setting[0]}</Typography>
+                  <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                <MenuItem
+                  onClick={() => {
+                    handleLogout();
+                    handleCloseUserMenu();
+                  }}
+                >
+                  <Typography textAlign="center">Log out</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            // make register and login buttons
+            <Box>
+              <Button
+                sx={{
+                  mr: 2,
+                  backgroundColor: "primary.dark",
+                  color: "primary.contrastText",
+                }}
+                variant="contained"
+                onClick={() => {
+                  setRegisterFormOpen(true);
+                }}
+              >
+                Register
+              </Button>
+              <Button
+                sx={{
+                  backgroundColor: "primary.dark",
+                  color: "primary.contrastText",
+                }}
+                variant="contained"
+                onClick={() => {
+                  setLoginFormOpen(true);
+                }}
+              >
+                Login
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
