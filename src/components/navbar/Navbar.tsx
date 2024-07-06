@@ -15,9 +15,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppName } from "../../App";
 import { AuthContext } from "../../contexts/authContext";
 
-const pages = [
-  ["Home", "/"],
-  ["About", "/about"],
+const pages: string[][] = [
+  // ["Home", "/"],
+  // ["About", "/about"],
 ];
 
 function Navbar() {
@@ -149,17 +149,20 @@ function Navbar() {
             ))}
           </Box>
 
-          {authenticated ? (
+          {authenticated || authUser ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="User options">
                 <IconButton
                   onClick={handleOpenUserMenu}
                   sx={{ p: 0, display: "flex", gap: "12px" }}
                 >
                   <Typography fontSize={18} color="primary.contrastText">
-                    {authUser?.name}
+                    {authUser?.username}
                   </Typography>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={authUser?.username}
+                    src="/static/images/avatar/2.jpg" // implementar avatar
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -178,14 +181,14 @@ function Navbar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem
+                {/* <MenuItem
                   onClick={() => {
                     navigate("/profile");
                     handleCloseUserMenu();
                   }}
                 >
                   <Typography textAlign="center">Profile</Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={() => {
                     handleLogout();
@@ -197,7 +200,6 @@ function Navbar() {
               </Menu>
             </Box>
           ) : (
-            // make register and login buttons
             <Box>
               <Button
                 sx={{

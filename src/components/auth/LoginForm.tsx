@@ -12,28 +12,29 @@ import { AuthContext } from "../../contexts/authContext";
 
 function LoginForm({ onClose }: { onClose: () => void }) {
   const { updateAuth } = React.useContext(AuthContext);
-  const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [emailError, setEmailError] = React.useState("");
+  const [usernameError, setUsernameError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [authError, setAuthError] = React.useState("");
 
   const handleSubmit = () => {
     let errors = {
-      emailError: "",
+      usernameError: "",
       passwordError: "",
     };
     // Reset error messages
-    setEmailError("");
+    setUsernameError("");
     setPasswordError("");
 
-    // Validate email
-    if (!email) {
-      setEmailError("Email is required");
-      errors.emailError = "Email is required";
-    } else if (!isValidEmail(email)) {
-      setEmailError("Invalid email format");
-      errors.emailError = "Invalid email format";
+    // Validate username
+    if (!username) {
+      setUsernameError("Username is required");
+      errors.usernameError = "Username is required";
+    } else if (!isValidUsername(username)) {
+      setUsernameError("Username must be between 3 and 15 characters long");
+      errors.usernameError =
+        "Username must be between 3 and 15 characters long";
     }
 
     // Validate password
@@ -46,8 +47,8 @@ function LoginForm({ onClose }: { onClose: () => void }) {
     }
 
     // If there are no errors, submit the form
-    if (!errors.emailError && !errors.passwordError) {
-      login(email, password)
+    if (!errors.usernameError && !errors.passwordError) {
+      login(username, password)
         .then((res) => {
           if (res.status === 200) {
             updateAuth();
@@ -56,14 +57,13 @@ function LoginForm({ onClose }: { onClose: () => void }) {
           }
         })
         .catch(() => {
-          setAuthError("Invalid email or password");
+          setAuthError("Invalid username or password");
         });
     }
   };
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    return emailRegex.test(email);
+  const isValidUsername = (username: string) => {
+    return username.length >= 3 && username.length <= 15;
   };
 
   return (
@@ -92,16 +92,18 @@ function LoginForm({ onClose }: { onClose: () => void }) {
       <DialogContent sx={{ maxWidth: "350px", padding: "16px 24px" }}>
         <form>
           <TextField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Username"
+            id="username-guild"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             fullWidth
             margin="dense"
-            error={!!emailError}
-            helperText={emailError}
+            error={!!usernameError}
+            helperText={usernameError}
           />
           <TextField
             label="Password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth

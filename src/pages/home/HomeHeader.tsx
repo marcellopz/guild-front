@@ -17,9 +17,11 @@ function HomeHeader() {
               height: "200px",
               maxWidth: "1000px",
               width: "100%",
+              backgroundImage: "url('/assets/league.jpg')",
+              backgroundSize: "cover",
             }}
           >
-            Banner ?
+            {/* Banner ? */}
           </Paper>
         </div>
       </Box>

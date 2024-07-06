@@ -1,12 +1,12 @@
 import { AuthUser } from "../../contexts/authContext";
 import axiosInstance from "../axios";
 
-export const login = async (email: string, password: string) => {
+export const login = async (username: string, password: string) => {
   try {
     const response = await axiosInstance.post(
       "/auth/login",
       {
-        email,
+        username,
         password,
       },
       { withCredentials: true }

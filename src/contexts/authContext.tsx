@@ -15,8 +15,7 @@ import { getUser, logout } from "../services/endpoints/authentication";
 
 export type AuthUser = {
   _id: string;
-  name: string;
-  email: string;
+  username: string;
   role: string;
   createdAt: string;
   updatedAt: string;
@@ -66,11 +65,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const updateAuth = () => {
     getUser()
       .then((user) => {
+        console.info("Authenticated");
         setAuthUser(user);
         setAuthenticated(true);
       })
       .catch(() => {
-        console.log("Not authenticated");
+        console.info("Not authenticated");
         setAuthenticated(false);
         setAuthUser(null);
       });

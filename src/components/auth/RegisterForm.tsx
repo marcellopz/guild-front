@@ -8,31 +8,32 @@ import {
 import React from "react";
 
 function RegisterForm({ onClose }: { onClose: () => void }) {
-  const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [emailError, setEmailError] = React.useState("");
+  const [usernameError, setUsernameError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [confirmPasswordError, setConfirmPasswordError] = React.useState("");
 
   const handleSubmit = () => {
     let errors = {
-      emailError: "",
+      usernameError: "",
       passwordError: "",
       confirmPasswordError: "",
     };
     // Reset error messages
-    setEmailError("");
+    setUsernameError("");
     setPasswordError("");
     setConfirmPasswordError("");
 
-    // Validate email
-    if (!email) {
-      setEmailError("Email is required");
-      errors.emailError = "Email is required";
-    } else if (!isValidEmail(email)) {
-      setEmailError("Invalid email format");
-      errors.emailError = "Invalid email format";
+    // Validate username
+    if (!username) {
+      setUsernameError("Username is required");
+      errors.usernameError = "Username is required";
+    } else if (!isValidUsername(username)) {
+      setUsernameError("Username must be between 3 and 15 characters long");
+      errors.usernameError =
+        "Username must be between 3 and 15 characters long";
     }
 
     // Validate password
@@ -55,7 +56,7 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
 
     // If there are no errors, submit the form
     if (
-      !errors.emailError &&
+      !errors.usernameError &&
       !errors.passwordError &&
       !errors.confirmPasswordError
     ) {
@@ -64,9 +65,8 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
     }
   };
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    return emailRegex.test(email);
+  const isValidUsername = (username: string) => {
+    return username.length >= 3 && username.length <= 15;
   };
 
   return (
@@ -79,16 +79,18 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
       <DialogContent sx={{ maxWidth: "350px", padding: "16px 24px" }}>
         <form>
           <TextField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Username"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             fullWidth
             margin="dense"
-            error={!!emailError}
-            helperText={emailError}
+            error={!!usernameError}
+            helperText={usernameError}
           />
           <TextField
             label="Password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
@@ -99,6 +101,7 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
           />
           <TextField
             label="Confirm Password"
+            id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             fullWidth
