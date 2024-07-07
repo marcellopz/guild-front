@@ -4,16 +4,21 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
 import React from "react";
+import { register } from "../../services/endpoints/authentication";
+import { AuthContext } from "../../contexts/authContext";
 
 function RegisterForm({ onClose }: { onClose: () => void }) {
+  const { updateAuth } = React.useContext(AuthContext);
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [usernameError, setUsernameError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [confirmPasswordError, setConfirmPasswordError] = React.useState("");
+  const [registerError, setRegisterError] = React.useState("");
 
   const handleSubmit = () => {
     let errors = {
@@ -60,8 +65,17 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
       !errors.passwordError &&
       !errors.confirmPasswordError
     ) {
-      // Handle form submission logic here
-      onClose();
+      register(username, password)
+        .then((res) => {
+          if (res.status === 201) {
+            updateAuth();
+            onClose();
+            return;
+          }
+        })
+        .catch(() => {
+          setRegisterError("Error registering user");
+        });
     }
   };
 
@@ -76,6 +90,22 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
       >
         Register
       </DialogTitle>
+      {registerError && (
+        <Typography
+          sx={{
+            color: "error.dark",
+            margin: "16px 24px 0 24px",
+            fontSize: "16px",
+            padding: "12px",
+            backgroundColor: "#f8d7da",
+            borderRadius: "4px",
+            border: "1px solid",
+            borderColor: "error.main",
+          }}
+        >
+          {registerError}
+        </Typography>
+      )}
       <DialogContent sx={{ maxWidth: "350px", padding: "16px 24px" }}>
         <form>
           <TextField
@@ -104,6 +134,7 @@ function RegisterForm({ onClose }: { onClose: () => void }) {
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyDownCapture={(e) => e.key === "Enter" && handleSubmit()}
             fullWidth
             margin="dense"
             type="password"

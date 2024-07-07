@@ -17,6 +17,24 @@ export const login = async (username: string, password: string) => {
   }
 };
 
+export const register = async (username: string, password: string) => {
+  try {
+    const response = await axiosInstance.post(
+      "/auth/register",
+      {
+        username,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const getUser = async () => {
   try {
     const response = await axiosInstance.get("/auth");

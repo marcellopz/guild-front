@@ -106,6 +106,7 @@ function LoginForm({ onClose }: { onClose: () => void }) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDownCapture={(e) => e.key === "Enter" && handleSubmit()}
             fullWidth
             margin="dense"
             type="password"
