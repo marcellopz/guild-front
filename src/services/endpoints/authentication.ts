@@ -46,7 +46,9 @@ export const getUser = async () => {
 
 export const logout = async () => {
   try {
-    const response = await axiosInstance.post("/auth/logout");
+    const response = await axiosInstance.post("/auth/logout", {
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     return Promise.reject(error);
