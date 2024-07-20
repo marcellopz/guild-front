@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   // Your logic to determine the base URL
   if (import.meta.env.MODE === "development") {
-    return "http://localhost:3001/api";
+    return "http://localhost:3001";
   } else {
-    return "https://guild-backend-n3vy.onrender.com/api";
+    return "https://guild-backend-n3vy.onrender.com";
   }
 };
 
 const axiosInstance = axios.create({
-  baseURL: getBaseUrl(),
+  baseURL: getBaseUrl() + "/api",
   withCredentials: true,
 });
 

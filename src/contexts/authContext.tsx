@@ -1,6 +1,8 @@
 import React, { createContext, useEffect } from "react";
 import FormDialog from "../components/auth/FormDialog";
 import { getUser, logout } from "../services/endpoints/authentication";
+import { io, Socket } from "socket.io-client";
+import { getBaseUrl } from "../services/axios";
 
 // user:
 // {
@@ -32,6 +34,8 @@ type AuthContextType = {
   authUser: AuthUser | null;
   handleLogout: () => void;
   updateAuth: () => void;
+  socketOn: boolean;
+  socketRef: React.MutableRefObject<Socket | null>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -44,6 +48,8 @@ export const AuthContext = createContext<AuthContextType>({
   authUser: null,
   handleLogout: () => {},
   updateAuth: () => {},
+  socketOn: false,
+  socketRef: { current: null },
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -51,36 +57,43 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loginFormOpen, setLoginFormOpen] = React.useState(false);
   const [registerFormOpen, setRegisterFormOpen] = React.useState(false);
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
-
-  console.log({
-    authenticated,
-    setAuthenticated,
-    loginFormOpen,
-    setLoginFormOpen,
-    registerFormOpen,
-    setRegisterFormOpen,
-    authUser,
-  });
+  const [socketOn, setSocketOn] = React.useState(false);
+  const socketRef = React.useRef<Socket | null>(null);
 
   const updateAuth = () => {
-    getUser()
+    return getUser()
       .then((user) => {
-        console.info("Authenticated");
+        socketRef.current?.emit("join_server", {
+          username: user.username,
+          userId: user._id,
+        });
+        socketRef.current?.on("connect", () => {
+          console.log("Connected to server");
+        });
         setAuthUser(user);
         setAuthenticated(true);
+        console.info("Authenticated");
+        return true;
       })
       .catch(() => {
         console.info("Not authenticated");
         setAuthenticated(false);
         setAuthUser(null);
+        return false;
       });
   };
 
   useEffect(() => {
+    const socket = io(getBaseUrl(), {
+      withCredentials: true,
+    });
+    socketRef.current = socket;
+    setSocketOn(true);
     updateAuth();
   }, []);
 
   const handleLogout = () => {
+    socketRef.current?.emit("logout");
     setAuthenticated(false);
     setAuthUser(null);
     logout();
@@ -98,6 +111,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         authUser,
         handleLogout,
         updateAuth,
+        socketRef,
+        socketOn,
       }}
     >
       {children}
