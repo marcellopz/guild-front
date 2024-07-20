@@ -154,7 +154,12 @@ function Navbar() {
               <Tooltip title="User options">
                 <IconButton
                   onClick={handleOpenUserMenu}
-                  sx={{ p: 0, display: "flex", gap: "12px" }}
+                  sx={{
+                    p: "8px",
+                    display: "flex",
+                    gap: "12px",
+                    borderRadius: "8px",
+                  }}
                 >
                   <Typography fontSize={18} color="primary.contrastText">
                     {authUser?.username}
@@ -181,14 +186,6 @@ function Navbar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {/* <MenuItem
-                  onClick={() => {
-                    navigate("/profile");
-                    handleCloseUserMenu();
-                  }}
-                >
-                  <Typography textAlign="center">Profile</Typography>
-                </MenuItem> */}
                 <MenuItem
                   onClick={() => {
                     handleLogout();

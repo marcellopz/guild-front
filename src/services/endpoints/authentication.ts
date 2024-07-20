@@ -38,7 +38,6 @@ export const register = async (username: string, password: string) => {
 export const getUser = async () => {
   try {
     const response = await axiosInstance.get("/auth");
-    console.log(response);
     return response.data.user as AuthUser;
   } catch (error) {
     return Promise.reject(error);
@@ -48,7 +47,6 @@ export const getUser = async () => {
 export const logout = async () => {
   try {
     const response = await axiosInstance.post("/auth/logout");
-    console.log(response);
     return response;
   } catch (error) {
     return Promise.reject(error);
