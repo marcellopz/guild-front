@@ -3,6 +3,7 @@ import { ThemeProvider } from "@emotion/react";
 import { themeOptions } from "./theme";
 import { createTheme } from "@mui/material";
 import AuthProvider from "./contexts/authContext";
+import SocketProvider from "./contexts/socketContext";
 
 export const AppName = "Guild";
 
@@ -12,9 +13,11 @@ const theme = createTheme(themeOptions);
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <SocketProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </SocketProvider>
     </ThemeProvider>
   );
 }

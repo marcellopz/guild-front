@@ -1,5 +1,5 @@
 import { Box, Divider, Paper, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type Game = {
   name: string;
@@ -50,6 +50,7 @@ function GameBox({ game }: { game: Game }) {
 }
 
 function LeftContent() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -125,7 +126,12 @@ function LeftContent() {
                 display: "flex",
                 justifyContent: "space-between",
                 paddingY: "8px",
+                "&:hover": {
+                  backgroundColor: "#f5e8cd",
+                  cursor: "pointer",
+                },
               }}
+              onClick={() => navigate("/chat/" + i)}
             >
               <Typography>Chatroom {i}</Typography>
               <Typography>0/100</Typography>

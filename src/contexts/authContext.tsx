@@ -1,8 +1,7 @@
 import React, { createContext, useEffect } from "react";
 import FormDialog from "../components/auth/FormDialog";
 import { getUser, logout } from "../services/endpoints/authentication";
-import { io, Socket } from "socket.io-client";
-import { getBaseUrl } from "../services/axios";
+import { SocketContext } from "./socketContext";
 
 // user:
 // {
@@ -34,8 +33,6 @@ type AuthContextType = {
   authUser: AuthUser | null;
   handleLogout: () => void;
   updateAuth: () => void;
-  socketOn: boolean;
-  socketRef: React.MutableRefObject<Socket | null>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -48,8 +45,6 @@ export const AuthContext = createContext<AuthContextType>({
   authUser: null,
   handleLogout: () => {},
   updateAuth: () => {},
-  socketOn: false,
-  socketRef: { current: null },
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -57,8 +52,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loginFormOpen, setLoginFormOpen] = React.useState(false);
   const [registerFormOpen, setRegisterFormOpen] = React.useState(false);
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
-  const [socketOn, setSocketOn] = React.useState(false);
-  const socketRef = React.useRef<Socket | null>(null);
+  const { socketRef } = React.useContext(SocketContext);
 
   const updateAuth = () => {
     return getUser()
@@ -84,11 +78,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const socket = io(getBaseUrl(), {
-      withCredentials: true,
-    });
-    socketRef.current = socket;
-    setSocketOn(true);
     updateAuth();
   }, []);
 
@@ -111,8 +100,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         authUser,
         handleLogout,
         updateAuth,
-        socketRef,
-        socketOn,
       }}
     >
       {children}
