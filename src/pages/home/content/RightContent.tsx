@@ -1,24 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../contexts/authContext";
+import { useContext } from "react";
 import { Avatar, Box, Divider, Paper, Typography } from "@mui/material";
-
-type userOnline = {
-  id: string;
-  username: string;
-  socketId: string;
-};
+import { SocketContext } from "../../../contexts/socketContext";
 
 function RightContent() {
-  const [usersOnline, setUsersOnline] = useState<Record<string, userOnline>>(
-    {}
-  );
-  const { socketRef, socketOn } = useContext(AuthContext);
-
-  useEffect(() => {
-    socketRef.current?.on("users_online", (data) => {
-      setUsersOnline(data);
-    });
-  }, [socketOn]);
+  const { usersOnline } = useContext(SocketContext);
 
   return (
     <Box sx={{ padding: "16px" }}>
@@ -37,7 +22,9 @@ function RightContent() {
           <Typography variant="h6" color="primary">
             Online users
           </Typography>
-          <Divider />
+            <Divider sx={{
+              height: '100%'
+            }} />
           {Object.keys(usersOnline).map((key) => {
             return (
               <Paper key={key} className="flex gap-2 items-center p-2">

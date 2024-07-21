@@ -10,7 +10,7 @@ function HomeContent() {
         sx={{
           maxWidth: "1000px",
           width: "100%",
-          minHeight: "600px", // remover depois
+          minHeight: "600px",
         }}
       >
         <Box className="w-full md:w-2/3">
