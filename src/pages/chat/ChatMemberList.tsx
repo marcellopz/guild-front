@@ -36,7 +36,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
       >
         {users.map((user) => (
           <Box
-            key={user._id}
+            key={user.username}
             sx={{
               display: "flex",
               gap: "8px",
