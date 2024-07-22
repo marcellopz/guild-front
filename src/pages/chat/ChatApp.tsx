@@ -56,6 +56,7 @@ function ChatApp() {
           maxWidth: "1000px",
           width: "100%",
           minHeight: "600px",
+          overflow: "hidden",
         }}
       >
         <Box className="w-full md:w-1/4">
