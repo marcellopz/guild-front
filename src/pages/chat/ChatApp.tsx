@@ -33,7 +33,7 @@ function ChatApp() {
     socket.on("chat_users_online", (users: ChatUser[]) => {
       setChatUsers(users);
     });
-    socket.emit("join_room", chatId, {
+    socket.emit("join_room", Number(chatId), {
       userId: authUser?._id,
       username: authUser?.username,
     });
@@ -56,6 +56,7 @@ function ChatApp() {
           maxWidth: "1000px",
           width: "100%",
           minHeight: "600px",
+          overflow: "hidden",
         }}
       >
         <Box className="w-full md:w-1/4">
