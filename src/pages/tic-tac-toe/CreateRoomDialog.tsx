@@ -7,7 +7,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { TicTacToeContext } from "./TicTacToeContext";
+import { AuthContext } from "../../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 interface DialogProps {
   open: boolean;
@@ -18,12 +21,20 @@ function CreateRoomDialog({ open, onClose }: DialogProps) {
   const [roomName, setRoomName] = React.useState("");
   const [roomPassword, setRoomPassword] = React.useState("");
   const [error, setError] = React.useState("");
+  const { authUser } = useContext(AuthContext);
+  const { socketRef } = useContext(TicTacToeContext);
+  const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
     if (!roomName) {
       setError("Room name is required");
       return;
     }
+    socketRef.current?.emit("join_gameroom", roomName, roomPassword, {
+      username: authUser?.username,
+      userId: authUser?._id,
+    });
+    navigate(`/tic-tac-toe/room/${roomName}`);
   };
 
   return (

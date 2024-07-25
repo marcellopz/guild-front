@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const grid = [
   ["x", null, "x"],
@@ -10,6 +10,9 @@ function Cell({ value }: { value: string | null }) {
   return (
     <Box
       className="cell"
+      onClick={() => {
+        console.log("click");
+      }}
       sx={{
         width: "150px",
         height: "150px",

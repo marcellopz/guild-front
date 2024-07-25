@@ -1,4 +1,7 @@
-import { Avatar, Box, Divider, Paper, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Typography } from "@mui/material";
+import { TicTacToeContext } from "../TicTacToeContext";
+import { useContext } from "react";
+import TicTacToeChat from "./TicTacToeChat";
 
 const usersOnline: { [key: string]: { username: string } } = {
   user1: {
@@ -10,8 +13,20 @@ const usersOnline: { [key: string]: { username: string } } = {
 };
 
 function TicTacToeUsers() {
+  const { currentRoom } = useContext(TicTacToeContext);
+  console.log(currentRoom);
+
   return (
-    <Box sx={{ padding: "16px", flexGrow: 1, maxWidth: "300px" }}>
+    <Box
+      sx={{
+        padding: "16px",
+        flexGrow: 1,
+        maxWidth: "350px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       {Object.keys(usersOnline).length === 0 ? (
         <Typography variant="h6" color="primary" className="text-center pt-8">
           No users online
@@ -24,21 +39,29 @@ function TicTacToeUsers() {
             gap: "8px",
           }}
         >
-          {Object.keys(usersOnline).map((key) => {
+          {currentRoom?.users?.map((user) => {
             return (
-              <Paper key={key} className="flex gap-2 items-center p-2">
+              <Paper key={user.id} className="flex gap-2 items-center p-2">
                 <Avatar
-                  alt={usersOnline[key].username}
+                  alt={user.username}
                   src="/static/images/avatar/2.jpg" // implementar avatar
                 />
-                <Typography fontSize={18} color="primary">
-                  {usersOnline[key].username}
+                <Typography
+                  fontSize={18}
+                  color="primary"
+                  sx={{ display: "flex", gap: "8px" }}
+                >
+                  {user.username}
+                  {currentRoom.owner.id === user.id && (
+                    <img src="/assets/crown.svg" height={20} width={20} />
+                  )}
                 </Typography>
               </Paper>
             );
           })}
         </Box>
       )}
+      <TicTacToeChat />
     </Box>
   );
 }

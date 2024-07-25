@@ -8,46 +8,49 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import CreateRoomDialog from "./CreateRoomDialog";
 import { Lock, LockOpen } from "@mui/icons-material";
+import { TicTacToeContext, TicTacToeProvider } from "./TicTacToeContext";
 
-const rows = [
-  {
-    name: "Casca de bala",
-    owner: "John",
-    hasPassword: true,
-    members: 3,
-  },
-  {
-    name: "Bom dia",
-    owner: "Sarah",
-    hasPassword: false,
-    members: 2,
-  },
-  {
-    name: "Ficar fortão",
-    owner: "Michael",
-    hasPassword: false,
-    members: 4,
-  },
-  {
-    name: "Rebolar pros crias",
-    owner: "Emily",
-    hasPassword: true,
-    members: 1,
-  },
-  {
-    name: "Swarm",
-    owner: "David",
-    hasPassword: false,
-    members: 2,
-  },
-];
+// const rows = [
+//   {
+//     name: "Casca de bala",
+//     owner: "John",
+//     hasPassword: true,
+//     members: 3,
+//   },
+//   {
+//     name: "Bom dia",
+//     owner: "Sarah",
+//     hasPassword: false,
+//     members: 2,
+//   },
+//   {
+//     name: "Ficar fortão",
+//     owner: "Michael",
+//     hasPassword: false,
+//     members: 4,
+//   },
+//   {
+//     name: "Rebolar pros crias",
+//     owner: "Emily",
+//     hasPassword: true,
+//     members: 1,
+//   },
+//   {
+//     name: "Swarm",
+//     owner: "David",
+//     hasPassword: false,
+//     members: 2,
+//   },
+// ];
 
 function TicTacToeTable() {
   const navigate = useNavigate();
+  const { rooms } = useContext(TicTacToeContext);
+  console.log(rooms);
 
   return (
     <TableContainer component={Paper}>
@@ -61,14 +64,14 @@ function TicTacToeTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.length === 0 && (
+          {rooms.length === 0 && (
             <TableRow>
               <TableCell colSpan={4} align="center">
                 No rooms found
               </TableCell>
             </TableRow>
           )}
-          {rows.map((row) => (
+          {rooms.map((row) => (
             <TableRow
               key={row.name}
               sx={{
@@ -85,11 +88,11 @@ function TicTacToeTable() {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="center">{row.owner}</TableCell>
+              <TableCell align="center">{row.owner.username}</TableCell>
               <TableCell align="center">
                 {row.hasPassword ? <Lock /> : <LockOpen />}
               </TableCell>
-              <TableCell align="center">{row.members}</TableCell>
+              <TableCell align="center">{row.users.length}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -100,14 +103,24 @@ function TicTacToeTable() {
 
 function TicTacToeApp() {
   const [createRoomOpen, setCreateRoomOpen] = React.useState(false);
-  const { roomId } = useParams();
+  const { roomName } = useParams();
+  const { socketRef } = useContext(TicTacToeContext);
+  console.log(socketRef);
 
-  if (roomId) {
+  if (roomName) {
     return <Outlet />;
   }
 
   return (
     <>
+      <button
+        onClick={() => {
+          console.log(socketRef);
+          socketRef?.current?.emit("grilha");
+        }}
+      >
+        xd
+      </button>
       <div className="p-4 pt-8 md:p-8 z-1 flex justify-center">
         <Paper
           className="flex flex-col p-8"
@@ -142,4 +155,12 @@ function TicTacToeApp() {
   );
 }
 
-export default TicTacToeApp;
+function WrappedTicTacToeApp() {
+  return (
+    <TicTacToeProvider>
+      <TicTacToeApp />
+    </TicTacToeProvider>
+  );
+}
+
+export default WrappedTicTacToeApp;

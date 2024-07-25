@@ -16,7 +16,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomeApp />} />
         <Route path="/tic-tac-toe" element={<TicTacToeApp />}>
-          <Route path="room/:roomId" element={<TicTacToeGame />} />
+          <Route path="room/:roomName" element={<TicTacToeGame />} />
         </Route>
         <Route path="/chat/:chatId" element={<ChatApp />} />
         <Route path="/about" element={<About />} />

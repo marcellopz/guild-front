@@ -33,6 +33,7 @@ type AuthContextType = {
   authUser: AuthUser | null;
   handleLogout: () => void;
   updateAuth: () => void;
+  authenticationFinished: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -45,9 +46,12 @@ export const AuthContext = createContext<AuthContextType>({
   authUser: null,
   handleLogout: () => {},
   updateAuth: () => {},
+  authenticationFinished: false,
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [authenticationFinished, setAuthenticationFinished] =
+    React.useState(false);
   const [authenticated, setAuthenticated] = React.useState(false);
   const [loginFormOpen, setLoginFormOpen] = React.useState(false);
   const [registerFormOpen, setRegisterFormOpen] = React.useState(false);
@@ -74,6 +78,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setAuthenticated(false);
         setAuthUser(null);
         return false;
+      })
+      .finally(() => {
+        setAuthenticationFinished(true);
       });
   };
 
@@ -100,6 +107,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         authUser,
         handleLogout,
         updateAuth,
+        authenticationFinished,
       }}
     >
       {children}
