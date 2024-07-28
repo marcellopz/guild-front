@@ -29,6 +29,12 @@ function TicTacToeGame() {
       alert("Room owner has left the room");
       navigate("/tic-tac-toe");
     });
+    socketRef.current?.on("game_already_started", () => {
+      alert("Game already started");
+    });
+    socketRef.current?.on("not_enough_players", () => {
+      alert("Not enough players");
+    });
   }, [authenticationFinished]);
 
   if (authenticationFinished && !authUser) {
