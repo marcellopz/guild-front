@@ -1,17 +1,21 @@
 import { Box, Typography } from "@mui/material";
+import { TicTacToeGameState } from "./TicTacToeGame";
+import { TicTacToeContext } from "../TicTacToeContext";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/authContext";
 
-const grid = [
-  ["x", null, "x"],
-  [null, "o", "x"],
-  ["o", null, null],
-];
-
-function Cell({ value }: { value: string | null }) {
+function Cell({ value, coords }: { value: string; coords: [number, number] }) {
+  const { socketRef } = useContext(TicTacToeContext);
+  const { authUser } = useContext(AuthContext);
   return (
     <Box
       className="cell"
       onClick={() => {
-        console.log("click");
+        if (value === "") {
+          console.log('emit "front_player_play"', authUser?._id, coords);
+          console.log(socketRef.current);
+          socketRef.current?.emit("front_player_play", authUser?._id, coords);
+        }
       }}
       sx={{
         width: "150px",
@@ -21,7 +25,7 @@ function Cell({ value }: { value: string | null }) {
         justifyContent: "center",
         padding: "20px",
         backgroundColor: "background.paper",
-        cursor: value === null ? "pointer" : "default",
+        cursor: value === "" ? "pointer" : "default",
         "&:hover": {
           backgroundColor: "background.default",
         },
@@ -37,7 +41,8 @@ function Cell({ value }: { value: string | null }) {
   );
 }
 
-function TicTacToeGrid() {
+function TicTacToeGrid({ gameState }: { gameState?: TicTacToeGameState }) {
+  if (!gameState) return null;
   return (
     <Box className="flex">
       <Box>
@@ -57,9 +62,9 @@ function TicTacToeGrid() {
               gap: "12px",
             }}
           >
-            <Cell value={grid[0][0]} />
-            <Cell value={grid[0][1]} />
-            <Cell value={grid[0][2]} />
+            <Cell value={gameState.grid[0][0]._simbol} coords={[0, 0]} />
+            <Cell value={gameState.grid[0][1]._simbol} coords={[0, 1]} />
+            <Cell value={gameState.grid[0][2]._simbol} coords={[0, 2]} />
           </Box>
           <Box
             sx={{
@@ -68,9 +73,9 @@ function TicTacToeGrid() {
               gap: "12px",
             }}
           >
-            <Cell value={grid[1][0]} />
-            <Cell value={grid[1][1]} />
-            <Cell value={grid[1][2]} />
+            <Cell value={gameState.grid[1][0]._simbol} coords={[1, 0]} />
+            <Cell value={gameState.grid[1][1]._simbol} coords={[1, 1]} />
+            <Cell value={gameState.grid[1][2]._simbol} coords={[1, 2]} />
           </Box>
           <Box
             sx={{
@@ -79,9 +84,9 @@ function TicTacToeGrid() {
               gap: "12px",
             }}
           >
-            <Cell value={grid[2][0]} />
-            <Cell value={grid[2][1]} />
-            <Cell value={grid[2][2]} />
+            <Cell value={gameState.grid[2][0]._simbol} coords={[2, 0]} />
+            <Cell value={gameState.grid[2][1]._simbol} coords={[2, 1]} />
+            <Cell value={gameState.grid[2][2]._simbol} coords={[2, 2]} />
           </Box>
         </Box>
         <Box

@@ -94,13 +94,6 @@ function TicTacToeChat() {
           }
         }}
       />
-      <button
-        onClick={() => {
-          socketRef.current?.emit("start_game");
-        }}
-      >
-        xd2
-      </button>
     </Box>
   );
 }

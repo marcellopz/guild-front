@@ -1,17 +1,40 @@
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import TicTacToeGrid from "./TicTacToeGrid";
 import TicTacToeUsers from "./TicTacToeUsers";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TicTacToeContext } from "../TicTacToeContext";
 import { AuthContext } from "../../../contexts/authContext";
 import LoadingComponent from "../../../components/LoadingComponent";
 import { ArrowBackIos } from "@mui/icons-material";
 
+export interface TicTacToeGameState {
+  playerTurn: string;
+  grid: Grid[][];
+  playerWin?: any;
+  draw: boolean;
+  players: Player[];
+}
+interface Player {
+  _name: string;
+  _id: string;
+  _symbol: string;
+}
+interface Grid {
+  _coordinates: number[];
+  _simbol: string;
+}
+
 function TicTacToeGame() {
   const { roomName } = useParams();
-  const { setCurrentRoom, socketRef } = useContext(TicTacToeContext);
+  const { setCurrentRoom, socketRef, currentRoom } =
+    useContext(TicTacToeContext);
   const { authUser, authenticationFinished } = useContext(AuthContext);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameState, setGameState] = useState<TicTacToeGameState | undefined>(
+    undefined
+  );
+  console.log(gameState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,11 +52,20 @@ function TicTacToeGame() {
       alert("Room owner has left the room");
       navigate("/tic-tac-toe");
     });
+    socketRef.current?.on("game_started", () => {
+      setGameStarted(true);
+    });
     socketRef.current?.on("game_already_started", () => {
       alert("Game already started");
     });
     socketRef.current?.on("not_enough_players", () => {
       alert("Not enough players");
+    });
+    socketRef.current?.on("send_game_state", (gameState) => {
+      setGameState(gameState);
+    });
+    socketRef.current?.on("testwe", (a) => {
+      console.log(a);
     });
   }, [authenticationFinished]);
 
@@ -68,8 +100,18 @@ function TicTacToeGame() {
             <span>Back</span>
           </Typography>
         </Box>
-        <div className="mb-8">
+        <div className="mb-8 flex justify-between">
           <h1 className="text-xl">{roomName}</h1>
+          {currentRoom?.owner.id === authUser?._id && !gameStarted && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                socketRef.current?.emit("start_game");
+              }}
+            >
+              Start game
+            </Button>
+          )}
         </div>
         <Box
           sx={{
@@ -77,7 +119,7 @@ function TicTacToeGame() {
             justifyContent: "space-between",
           }}
         >
-          <TicTacToeGrid />
+          <TicTacToeGrid gameState={gameState} />
           <Divider orientation="vertical" />
           <TicTacToeUsers />
         </Box>

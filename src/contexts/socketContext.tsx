@@ -5,27 +5,24 @@ import { getBaseUrl } from "../services/axios";
 type userOnline = {
   id: string;
   username: string;
-  socketId: string;
 };
 
 type SocketContextType = {
   socketRef: React.MutableRefObject<Socket | null>;
   socketOn: boolean;
-  usersOnline: Record<string, userOnline>;
+  usersOnline: userOnline[];
 };
 
 export const SocketContext = createContext<SocketContextType>({
   socketRef: { current: null },
   socketOn: false,
-  usersOnline: {},
+  usersOnline: [],
 });
 
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
   const [socketOn, setSocketOn] = React.useState(false);
-  const [usersOnline, setUsersOnline] = React.useState<
-    Record<string, userOnline>
-  >({});
+  const [usersOnline, setUsersOnline] = React.useState<userOnline[]>([]);
 
   useEffect(() => {
     const socket = io(getBaseUrl(), {
@@ -37,6 +34,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     socketRef.current?.on("users_online", (data) => {
+      console.log(data);
       setUsersOnline(data);
     });
   }, [socketOn]);
