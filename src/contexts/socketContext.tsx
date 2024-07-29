@@ -10,19 +10,21 @@ type userOnline = {
 type SocketContextType = {
   socketRef: React.MutableRefObject<Socket | null>;
   socketOn: boolean;
-  usersOnline: userOnline[];
+  usersOnline: Record<string, userOnline>;
 };
 
 export const SocketContext = createContext<SocketContextType>({
   socketRef: { current: null },
   socketOn: false,
-  usersOnline: [],
+  usersOnline: {},
 });
 
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
   const [socketOn, setSocketOn] = React.useState(false);
-  const [usersOnline, setUsersOnline] = React.useState<userOnline[]>([]);
+  const [usersOnline, setUsersOnline] = React.useState<
+    Record<string, userOnline>
+  >({});
 
   useEffect(() => {
     const socket = io(getBaseUrl(), {
