@@ -7,7 +7,7 @@ function RightContent() {
 
   return (
     <Box sx={{ padding: "16px" }}>
-      {usersOnline.length === 0 ? (
+      {Object.keys(usersOnline).length === 0 ? (
         <Typography variant="h6" color="primary" className="text-center pt-8">
           No users online
         </Typography>
@@ -27,15 +27,15 @@ function RightContent() {
               height: "100%",
             }}
           />
-          {usersOnline.map((user) => {
+          {Object.keys(usersOnline).map((key) => {
             return (
-              <Paper key={user.id} className="flex gap-2 items-center p-2">
+              <Paper key={key} className="flex gap-2 items-center p-2">
                 <Avatar
-                  alt={user.username}
+                  alt={usersOnline[key].username}
                   src="/static/images/avatar/2.jpg" // implementar avatar
                 />
                 <Typography fontSize={18} color="primary">
-                  {user.username}
+                  {usersOnline[key].username}
                 </Typography>
               </Paper>
             );

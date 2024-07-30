@@ -25,6 +25,29 @@ interface Grid {
   _simbol: string;
 }
 
+const initialGameState: TicTacToeGameState = {
+  playerTurn: "",
+  grid: [
+    [
+      { _coordinates: [0, 0], _simbol: "" },
+      { _coordinates: [0, 1], _simbol: "" },
+      { _coordinates: [0, 2], _simbol: "" },
+    ],
+    [
+      { _coordinates: [1, 0], _simbol: "" },
+      { _coordinates: [1, 1], _simbol: "" },
+      { _coordinates: [1, 2], _simbol: "" },
+    ],
+    [
+      { _coordinates: [2, 0], _simbol: "" },
+      { _coordinates: [2, 1], _simbol: "" },
+      { _coordinates: [2, 2], _simbol: "" },
+    ],
+  ],
+  draw: false,
+  players: [],
+};
+
 function TicTacToeGame() {
   const { roomName } = useParams();
   const { setCurrentRoom, socketRef, currentRoom } =
@@ -32,9 +55,8 @@ function TicTacToeGame() {
   const { authUser, authenticationFinished } = useContext(AuthContext);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameState, setGameState] = useState<TicTacToeGameState | undefined>(
-    undefined
+    initialGameState
   );
-  console.log(gameState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +90,10 @@ function TicTacToeGame() {
       console.log(a);
     });
   }, [authenticationFinished]);
+
+  useEffect(() => {
+    gameState?.playerWin && alert(gameState.playerWin._name + " wins");
+  }, [gameState]);
 
   if (authenticationFinished && !authUser) {
     navigate("/");

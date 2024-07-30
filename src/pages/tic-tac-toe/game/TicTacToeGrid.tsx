@@ -41,7 +41,30 @@ function Cell({ value, coords }: { value: string; coords: [number, number] }) {
   );
 }
 
+function TextUnder({ gameState }: { gameState: TicTacToeGameState }) {
+  if (gameState.playerWin) {
+    return (
+      <Typography variant="h5">{gameState.playerWin?._name} wins!</Typography>
+    );
+  }
+  if (gameState.draw) {
+    return <Typography variant="h5">It's a draw!</Typography>;
+  }
+  if (gameState.playerTurn !== "") {
+    return (
+      <Typography variant="h5">
+        It's{" "}
+        {gameState.players.find((p) => p._id === gameState.playerTurn)?._name +
+          "'s "}
+        turn
+      </Typography>
+    );
+  }
+  return null;
+}
+
 function TicTacToeGrid({ gameState }: { gameState?: TicTacToeGameState }) {
+  console.log(gameState);
   if (!gameState) return null;
   return (
     <Box className="flex">
@@ -97,7 +120,7 @@ function TicTacToeGrid({ gameState }: { gameState?: TicTacToeGameState }) {
             justifyContent: "center",
           }}
         >
-          <Typography variant="h5">It's your turn</Typography>
+          <TextUnder gameState={gameState} />
         </Box>
       </Box>
     </Box>

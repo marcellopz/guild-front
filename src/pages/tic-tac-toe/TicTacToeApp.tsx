@@ -104,8 +104,6 @@ function TicTacToeTable() {
 function TicTacToeApp() {
   const [createRoomOpen, setCreateRoomOpen] = React.useState(false);
   const { roomName } = useParams();
-  const { socketRef } = useContext(TicTacToeContext);
-  console.log(socketRef);
 
   if (roomName) {
     return <Outlet />;
@@ -113,14 +111,6 @@ function TicTacToeApp() {
 
   return (
     <>
-      <button
-        onClick={() => {
-          console.log(socketRef);
-          socketRef?.current?.emit("grilha");
-        }}
-      >
-        xd
-      </button>
       <div className="p-4 pt-8 md:p-8 z-1 flex justify-center">
         <Paper
           className="flex flex-col p-8"
