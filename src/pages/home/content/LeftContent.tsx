@@ -75,7 +75,7 @@ function LeftContent() {
           game={{
             name: "game1",
             picture: "pic1",
-            url: "url1",
+            url: "/tic-tac-toe",
           }}
         />
         <GameBox

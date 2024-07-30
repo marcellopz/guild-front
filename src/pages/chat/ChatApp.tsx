@@ -33,7 +33,7 @@ function ChatApp() {
     socket.on("chat_users_online", (users: ChatUser[]) => {
       setChatUsers(users);
     });
-    socket.emit("join_room", Number(chatId), {
+    socket.emit("join_chatroom", Number(chatId), {
       userId: authUser?._id,
       username: authUser?.username,
     });

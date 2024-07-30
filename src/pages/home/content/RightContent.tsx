@@ -22,9 +22,11 @@ function RightContent() {
           <Typography variant="h6" color="primary">
             Online users
           </Typography>
-            <Divider sx={{
-              height: '100%'
-            }} />
+          <Divider
+            sx={{
+              height: "100%",
+            }}
+          />
           {Object.keys(usersOnline).map((key) => {
             return (
               <Paper key={key} className="flex gap-2 items-center p-2">
