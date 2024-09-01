@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { getBaseUrl } from "../../services/axios";
+import { useNavigate } from "react-router-dom";
 
 export type GameRoom = {
   name: string;
@@ -40,18 +41,25 @@ export const TicTacToeProvider: React.FC<{ children: React.ReactNode }> = ({
   const socketRef = useRef<Socket | null>(null);
   const [rooms, setRooms] = useState<GameRoom[]>([]);
   const [currentRoom, setCurrentRoom] = useState<GameRoom | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const socket = io(getBaseUrl() + "/tic-tac-toe", {
       withCredentials: true,
     });
     socketRef.current = socket;
+    socket.onAny((eventName, ...args) => {
+      console.log(eventName, args);
+    });
     socket.on("existing_rooms", (_rooms) => {
       setRooms(_rooms);
     });
-    return () => {
-      socketRef.current?.disconnect();
-    };
+    socket.on("join_gameroom_response", (roomName) => {
+      navigate(`/tic-tac-toe/room/${roomName}`);
+    });
+    // return () => {
+    //   socketRef.current?.disconnect();
+    // };
   }, []);
 
   return (

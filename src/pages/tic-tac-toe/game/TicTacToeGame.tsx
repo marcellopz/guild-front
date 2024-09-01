@@ -71,8 +71,10 @@ function TicTacToeGame() {
     });
     socketRef.current?.emit("get_room", roomName);
     socketRef.current?.on("room_deleted", () => {
-      alert("Room owner has left the room");
-      navigate("/tic-tac-toe");
+      if (window.location.pathname.startsWith("/tic-tac-toe/room/")) {
+        alert("Room owner has left the room");
+        navigate("/tic-tac-toe");
+      }
     });
     socketRef.current?.on("game_started", () => {
       setGameStarted(true);
@@ -86,13 +88,11 @@ function TicTacToeGame() {
     socketRef.current?.on("send_game_state", (gameState) => {
       setGameState(gameState);
     });
-    socketRef.current?.on("testwe", (a) => {
-      console.log(a);
-    });
   }, [authenticationFinished]);
 
   useEffect(() => {
     gameState?.playerWin && alert(gameState.playerWin._name + " wins");
+    gameState?.draw && alert("Draw");
   }, [gameState]);
 
   if (authenticationFinished && !authUser) {
@@ -117,6 +117,7 @@ function TicTacToeGame() {
           <Typography
             className="cursor-pointer flex items-center"
             onClick={() => {
+              socketRef.current?.emit("leave_gameroom");
               navigate("/tic-tac-toe");
             }}
             variant="subtitle1"
@@ -138,6 +139,17 @@ function TicTacToeGame() {
               Start game
             </Button>
           )}
+          {currentRoom?.owner.id === authUser?._id &&
+            (gameState?.playerWin || gameState?.draw) && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  socketRef.current?.emit("restart_game");
+                }}
+              >
+                Restart game
+              </Button>
+            )}
         </div>
         <Box
           sx={{

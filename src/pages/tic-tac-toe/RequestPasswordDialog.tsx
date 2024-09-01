@@ -7,32 +7,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { TicTacToeContext } from "./TicTacToeContext";
 import { AuthContext } from "../../contexts/authContext";
 
 interface DialogProps {
   open: boolean;
   onClose: () => void;
+  roomName: string;
 }
 
-function CreateRoomDialog({ open, onClose }: DialogProps) {
-  const [roomName, setRoomName] = React.useState("");
-  const [roomPassword, setRoomPassword] = React.useState("");
+function RequestPasswordDialog({ open, onClose, roomName }: DialogProps) {
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authenticationFinished } = useContext(AuthContext);
   const { socketRef } = useContext(TicTacToeContext);
 
-  const handleCreateRoom = async () => {
-    if (!roomName) {
-      setError("Room name is required");
-      return;
-    }
-    socketRef.current?.emit("create_gameroom", roomName, roomPassword, {
+  useEffect(() => {
+    if (!socketRef.current) return;
+    if (!authenticationFinished) return;
+    socketRef.current?.on("wrong_password", () => {
+      setError("Invalid password");
+    });
+  }, [authenticationFinished]);
+
+  const joinRoom = async () => {
+    socketRef.current?.emit("join_gameroom", roomName, password, {
       username: authUser?.username,
       userId: authUser?._id,
     });
-    onClose();
+    // onClose();
   };
 
   return (
@@ -43,7 +47,7 @@ function CreateRoomDialog({ open, onClose }: DialogProps) {
         setError("");
       }}
     >
-      <DialogTitle>Create Room</DialogTitle>
+      <DialogTitle>Join {roomName}</DialogTitle>
       <DialogContent
         sx={{
           display: "flex",
@@ -52,18 +56,9 @@ function CreateRoomDialog({ open, onClose }: DialogProps) {
         }}
       >
         <TextField
-          sx={{
-            marginTop: "1rem",
-          }}
-          label="Room Name"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-          fullWidth
-        />
-        <TextField
           label="Room Password"
-          value={roomPassword}
-          onChange={(e) => setRoomPassword(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           fullWidth
         />
         <Typography color="error">{error}</Typography>
@@ -82,12 +77,12 @@ function CreateRoomDialog({ open, onClose }: DialogProps) {
         >
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleCreateRoom} color="primary">
-          Create
+        <Button variant="contained" onClick={joinRoom} color="primary">
+          Join
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-export default CreateRoomDialog;
+export default RequestPasswordDialog;

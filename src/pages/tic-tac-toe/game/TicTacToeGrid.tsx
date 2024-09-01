@@ -12,8 +12,6 @@ function Cell({ value, coords }: { value: string; coords: [number, number] }) {
       className="cell"
       onClick={() => {
         if (value === "") {
-          console.log('emit "front_player_play"', authUser?._id, coords);
-          console.log(socketRef.current);
           socketRef.current?.emit("front_player_play", authUser?._id, coords);
         }
       }}
@@ -64,7 +62,6 @@ function TextUnder({ gameState }: { gameState: TicTacToeGameState }) {
 }
 
 function TicTacToeGrid({ gameState }: { gameState?: TicTacToeGameState }) {
-  console.log(gameState);
   if (!gameState) return null;
   return (
     <Box className="flex">

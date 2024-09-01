@@ -66,7 +66,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           userId: user._id,
         });
         socketRef.current?.on("connect", () => {
-          console.log("Connected to server");
+          console.info("Connected to server");
         });
         setAuthUser(user);
         setAuthenticated(true);

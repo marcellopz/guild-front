@@ -14,7 +14,6 @@ const usersOnline: { [key: string]: { username: string } } = {
 
 function TicTacToeUsers() {
   const { currentRoom } = useContext(TicTacToeContext);
-  console.log(currentRoom);
 
   return (
     <Box
