@@ -8,7 +8,7 @@ import SocketProvider from "./contexts/socketContext";
 export const AppName = "Guild";
 
 const theme = createTheme(themeOptions);
-// console.log(import.meta.env);
+// console.info(import.meta.env);
 
 function App() {
   return (

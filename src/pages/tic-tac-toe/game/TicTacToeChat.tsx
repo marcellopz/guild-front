@@ -25,7 +25,6 @@ function TicTacToeChat() {
 
   const sendMessage = useCallback(
     function (message: string) {
-      console.log("sending message");
       socketRef.current?.emit("front_new_message", {
         message,
         createdAt: new Date().toISOString(),
